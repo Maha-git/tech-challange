@@ -1,0 +1,32 @@
+#!/bin/bash
+
+function execute () {
+  if [ "$1" != "" ]; then
+    CMD="$1"
+    DESCRIPTION="Executing Command: $CMD"
+  else
+    echo "Missing Parameters, should be in the format 'execute <cmd/function> <description>'"
+    exit 1  
+  fi
+
+  echo #### $DESCRIPTION ####
+
+  $CMD
+  if [ "$?" != "0" ]; then
+    echo "Unable to execute $CMD, exiting"
+    exit 1
+  fi
+} &>> /var/log/user_data.log
+
+execute "sudo poweroff"
+
+execute "sudo apt-get update"
+execute "sudo apt-get -y upgrade"
+
+execute "sudo apt-get -y dist-upgrade"
+execute "sudo apt-get -y install auditd"
+
+echo "-a exit,always -F arch=b32 -S execve -k auditcmd"| sudo tee -a /etc/audit/rules.d/audit.rules
+echo "-a exit,always -F arch=b64 -S execve -k auditcmd"| sudo tee -a /etc/audit/rules.d/audit.rules
+
+execute "sudo augenrules"

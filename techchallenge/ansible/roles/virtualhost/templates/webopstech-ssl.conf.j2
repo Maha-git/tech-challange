@@ -1,0 +1,9 @@
+server {
+  listen 443 ssl;
+  ssl_certificate /etc/nginx/ssl/certificate.pem;
+  ssl_certificate_key /etc/nginx/ssl/certificate.key;
+
+  location / {
+    proxy_pass http://localhost:8080/{{webapp_path}}/;
+  } 
+}

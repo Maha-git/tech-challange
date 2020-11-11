@@ -1,0 +1,11 @@
+---
+
+# Install nginx...
+- apt: name=nginx state=present
+
+# Disable the default site
+- file: dest=/etc/nginx/sites-enabled/default state=absent
+  notify: poke nginx
+
+# Make sure it's running
+- service: name=nginx state=started

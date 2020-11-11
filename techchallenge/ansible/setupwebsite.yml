@@ -1,0 +1,9 @@
+- hosts: localhost
+  connection: local
+  roles:
+    - common
+  #  - webserver
+    - appserver
+    - webapp
+    - virtualhost
+

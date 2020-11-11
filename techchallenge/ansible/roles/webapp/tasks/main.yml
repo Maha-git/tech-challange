@@ -1,0 +1,6 @@
+---
+
+# Deploy the webapp
+- copy: src=webopstest.war dest=/var/lib/tomcat7/webapps
+  notify: poke tomcat
+

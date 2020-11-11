@@ -1,0 +1,35 @@
+---
+###############################################################
+# N.B. This role depends on the webserver role to setup nginx
+###############################################################
+
+# Setup and activate nginx port 80 vhost
+- copy: src=webopstech-plain.conf dest=/etc/nginx/sites-available
+  notify: poke nginx
+
+- file:
+     src=/etc/nginx/sites-available/webopstech-plain.conf
+     dest=/etc/nginx/sites-enabled/webopstech-plain.conf 
+     state=link
+  notify: poke nginx 
+
+# Setup SSL Key and Cert
+- file: dest=/etc/nginx/ssl mode=0700 state=directory
+
+- shell: "cd /etc/nginx/ssl ; openssl req -new -newkey {{ssl_key_type}} -nodes -keyout certificate.key -subj '/{{ssl_certificate_subject}}/'  | openssl x509 -req -signkey certificate.key  -out certificate.pem"
+  args:
+    creates: /etc/nginx/ssl/certificate.pem
+  notify: poke nginx
+
+# Setup and activate ssl vhost
+- template: 
+    src=webopstech-ssl.conf.j2 
+    dest=/etc/nginx/sites-available/webopstech-ssl.conf
+  notify: poke nginx
+
+- file:
+     src=/etc/nginx/sites-available/webopstech-ssl.conf
+     dest=/etc/nginx/sites-enabled/webopstech-ssl.conf
+     state=link
+  notify: poke nginx
+

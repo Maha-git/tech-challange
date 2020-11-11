@@ -1,0 +1,4 @@
+---
+
+- name: poke tomcat
+  service: name=tomcat7 state=restarted enabled=true

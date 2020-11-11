@@ -1,0 +1,6 @@
+---
+
+# (Re)Start nginx 
+- name: poke nginx
+  service: name=nginx state=restarted enabled=yes
+

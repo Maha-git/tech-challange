@@ -1,0 +1,8 @@
+---
+
+# Install Tomcat..
+- apt: name=tomcat7 state=present
+  notify: poke tomcat
+
+# Ensure Tomcat is running
+- service;: name=tomcat7 state=started
